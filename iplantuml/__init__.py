@@ -14,7 +14,7 @@ __uri__ = "https://github.com/jbn/iplantuml"
 __doc__ = __description__ + " <" + __uri__ + ">"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2017 John Bjorn Nelson"
-__version__ = "0.0.6"
+__version__ = "0.1.0"
 __author__ = "John Bjorn Nelson"
 __email__ = "jbn@abreka.com"
 
@@ -47,8 +47,6 @@ def plantuml_web(*file_names, **kwargs):
     PlantUML's web service via the plantweb module.
 
     :param file_names: the filenames of the documents for parsing by PlantUML.
-    :param kwargs: optionally `plantuml_path`, indicating where the PlantUML
-        jar file resides.
     :return: the path to the generated SVG UML diagram.
     """
 
@@ -90,9 +88,7 @@ def plantuml(line, cell):
         return SVG(filename=svg_name)
     finally:
         if not retain:
-            os.unlink(uml_path)
-
+            if os.path.exists(uml_path): os.unlink(uml_path)
             svg_path = base_name + ".svg"
-            if os.path.exists(svg_path):
-                os.unlink(svg_path)
+            if os.path.exists(svg_path): os.unlink(svg_path)
 
