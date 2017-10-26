@@ -95,7 +95,6 @@ def plantuml(line, cell):
         else:
             uml_path = base_name + ".uml"
             urllib.urlretrieve(location, uml_path)
-            retain_uml = False
 
     try:
         output = plantuml_web(uml_path) if use_web else plantuml_exec(uml_path, plantuml_path=os.path.abspath(args.plantuml_path or PLANTUMLPATH))
