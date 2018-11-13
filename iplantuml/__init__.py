@@ -1,16 +1,19 @@
 import argparse
 import os
 import subprocess
-import urllib
 import uuid
 import sys
 
 from IPython.core.magic import register_cell_magic
 from IPython.display import SVG
 
-# Import urlparse() for either Python 2 or 3
-if sys.version_info >= (3,): from urllib.parse import urlparse
-else: from urlparse import urlparse
+# Import urlparse() & urlretrieve() for either Python 2 or 3
+if sys.version_info >= (3,):
+    from urllib.parse import urlparse
+    from urllib.request import urlretrieve
+else:
+    from urlparse import urlparse
+    from urllib import urlretrieve
 
 # Dummy import to ensure plantweb module is present
 import plantweb
@@ -99,7 +102,7 @@ def plantuml(line, cell):
             retain_uml = True
         else:
             uml_path = base_name + ".uml"
-            urllib.urlretrieve(location, uml_path)
+            urlretrieve(location, uml_path)
 
     try:
         output = plantuml_web(uml_path) if use_web else plantuml_exec(uml_path, plantuml_path=os.path.abspath(args.plantuml_path or PLANTUMLPATH))
