@@ -4,7 +4,7 @@ import subprocess
 import uuid
 import sys
 
-from IPython.core.magic import register_cell_magic
+from IPython.core.magic import register_line_cell_magic
 from IPython.display import SVG
 
 # Import urlparse() & urlretrieve() for either Python 2 or 3
@@ -68,8 +68,8 @@ def plantuml_web(*file_names, **kwargs):
 
     return [os.path.splitext(os.path.basename(f))[0] + ".svg" for f in file_names]
 
-@register_cell_magic
-def plantuml(line, cell):
+@register_line_cell_magic
+def plantuml(line, cell=None):
     """
     Generate and inline the SVG portrayal of the given PlantUML UML spec.
 
@@ -80,10 +80,10 @@ def plantuml(line, cell):
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--file", action="store_true", help="render using specified path or url")
-    parser.add_argument("-j", "--jar", action="store_true", help="render using plantuml.jar (default is web service)")
-    parser.add_argument("-n", "--name",  type=str, default=None, help="persist diagram as <name>.uml and <name>.svg after rendering")
-    parser.add_argument("-p", "--plantuml-path", default=None, help="specify PlantUML jar path (default=%s)" % PLANTUMLPATH)
+    parser.add_argument("-f", "--file", type=str, help="render using specified path or url")
+    parser.add_argument("-j", "--jar", type=str, help="render using plantuml.jar (default is web service)")
+    parser.add_argument("-n", "--name",  type=str, help="persist diagram as <name>.uml and <name>.svg after rendering")
+    parser.add_argument("-p", "--plantuml-path", type=str, help="specify PlantUML jar path (default=%s)" % PLANTUMLPATH)
     args = parser.parse_args(line.split() if line else "")
 
     retain_uml = retain_svg = args.name is not None
@@ -95,7 +95,7 @@ def plantuml(line, cell):
         with open(uml_path, 'w') as fp:
             fp.write(cell)
     else:
-        location = cell.strip().split()[0]
+        location = args.file
         url = urlparse(location)
         if url.scheme in ['', 'file']:
             uml_path = url.path
