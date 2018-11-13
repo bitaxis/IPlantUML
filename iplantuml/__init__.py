@@ -91,6 +91,7 @@ def plantuml(line, cell=None):
     use_web = not (args.jar or args.plantuml_path)
 
     if not args.file:
+        if cell is None: raise Exception("Cell magic variant (%%plantuml) required, and valid PlantUML must be provided as the cell text!")
         uml_path = base_name + ".uml"
         with open(uml_path, 'w') as fp:
             fp.write(cell)
