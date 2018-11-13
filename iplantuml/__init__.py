@@ -1,22 +1,30 @@
 import argparse
 import os
 import subprocess
-import urllib
-import urlparse
 import uuid
+import sys
 
 from IPython.core.magic import register_cell_magic
 from IPython.display import SVG
 
-import plantweb # dummy import to ensure plantweb module is present
+# Import urlparse() & urlretrieve() for either Python 2 or 3
+if sys.version_info >= (3,):
+    from urllib.parse import urlparse
+    from urllib.request import urlretrieve
+else:
+    from urlparse import urlparse
+    from urllib import urlretrieve
+
+# Dummy import to ensure plantweb module is present
+import plantweb
 
 __title__ = "iplantuml"
 __description__ = "Package which adds a PlantUML cell magic to IPython."
 __uri__ = "https://github.com/jbn/iplantuml"
 __doc__ = __description__ + " <" + __uri__ + ">"
 __license__ = "MIT"
-__copyright__ = "Copyright (c) 2017 John Bjorn Nelson"
-__version__ = "0.2.0"
+__copyright__ = "Copyright (c) 2017-8 John Bjorn Nelson"
+__version__ = "0.3.0"
 __author__ = "John Bjorn Nelson"
 __email__ = "jbn@abreka.com"
 
@@ -74,7 +82,7 @@ def plantuml(line, cell):
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", action="store_true", help="render using specified path or url")
     parser.add_argument("-j", "--jar", action="store_true", help="render using plantuml.jar (default is web service)")
-    parser.add_argument("-n", "--name",  type=str, default=None, help="persist as <name>.uml and <name>.svg after rendering")
+    parser.add_argument("-n", "--name",  type=str, default=None, help="persist diagram as <name>.uml and <name>.svg after rendering")
     parser.add_argument("-p", "--plantuml-path", default=None, help="specify PlantUML jar path (default=%s)" % PLANTUMLPATH)
     args = parser.parse_args(line.split() if line else "")
 
@@ -88,13 +96,13 @@ def plantuml(line, cell):
             fp.write(cell)
     else:
         location = cell.strip().split()[0]
-        url = urlparse.urlparse(location)
+        url = urlparse(location)
         if url.scheme in ['', 'file']:
             uml_path = url.path
             retain_uml = True
         else:
             uml_path = base_name + ".uml"
-            urllib.urlretrieve(location, uml_path)
+            urlretrieve(location, uml_path)
 
     try:
         output = plantuml_web(uml_path) if use_web else plantuml_exec(uml_path, plantuml_path=os.path.abspath(args.plantuml_path or PLANTUMLPATH))
