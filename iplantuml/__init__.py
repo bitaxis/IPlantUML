@@ -23,8 +23,8 @@ __description__ = "Package which adds a PlantUML cell magic to IPython."
 __uri__ = "https://github.com/jbn/iplantuml"
 __doc__ = __description__ + " <" + __uri__ + ">"
 __license__ = "MIT"
-__copyright__ = "Copyright (c) 2017 John Bjorn Nelson"
-__version__ = "0.2.0"
+__copyright__ = "Copyright (c) 2017-8 John Bjorn Nelson"
+__version__ = "0.3.0"
 __author__ = "John Bjorn Nelson"
 __email__ = "jbn@abreka.com"
 
@@ -82,7 +82,7 @@ def plantuml(line, cell):
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", action="store_true", help="render using specified path or url")
     parser.add_argument("-j", "--jar", action="store_true", help="render using plantuml.jar (default is web service)")
-    parser.add_argument("-n", "--name",  type=str, default=None, help="persist as <name>.uml and <name>.svg after rendering")
+    parser.add_argument("-n", "--name",  type=str, default=None, help="persist diagram as <name>.uml and <name>.svg after rendering")
     parser.add_argument("-p", "--plantuml-path", default=None, help="specify PlantUML jar path (default=%s)" % PLANTUMLPATH)
     args = parser.parse_args(line.split() if line else "")
 
