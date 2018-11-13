@@ -82,7 +82,7 @@ def plantuml(line, cell):
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", action="store_true", help="render using specified path or url")
     parser.add_argument("-j", "--jar", action="store_true", help="render using plantuml.jar (default is web service)")
-    parser.add_argument("-n", "--name",  type=str, default=None, help="persist as <name>.uml and <name>.svg after rendering")
+    parser.add_argument("-n", "--name",  type=str, default=None, help="persist diagram as <name>.uml and <name>.svg after rendering")
     parser.add_argument("-p", "--plantuml-path", default=None, help="specify PlantUML jar path (default=%s)" % PLANTUMLPATH)
     args = parser.parse_args(line.split() if line else "")
 
