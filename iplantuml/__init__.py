@@ -91,11 +91,14 @@ def plantuml(line, cell=None):
     use_web = not (args.jar or args.plantuml_path)
 
     if not args.file:
+        # If no file path/url is provided, then we expect PlantUML text to be provided as cell text in order for the cell magic to work
         if cell is None: raise Exception("Cell magic variant (%%plantuml) required, and valid PlantUML must be provided as the cell text!")
         uml_path = base_name + ".uml"
         with open(uml_path, 'w') as fp:
             fp.write(cell)
     else:
+        # If some file path/url is provided, then we will read in PlantUML text for rendering in order for the line magic to work; additional
+        # valid Python code can be provided as the cell text.
         location = args.file
         url = urlparse(location)
         if url.scheme in ['', 'file']:
