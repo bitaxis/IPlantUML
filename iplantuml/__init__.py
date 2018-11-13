@@ -2,13 +2,18 @@ import argparse
 import os
 import subprocess
 import urllib
-import urlparse
 import uuid
+import sys
 
 from IPython.core.magic import register_cell_magic
 from IPython.display import SVG
 
-import plantweb # dummy import to ensure plantweb module is present
+# Import urlparse() for either Python 2 or 3
+if sys.version_info >= (3,): from urllib.parse import urlparse
+else: from urlparse import urlparse
+
+# Dummy import to ensure plantweb module is present
+import plantweb
 
 __title__ = "iplantuml"
 __description__ = "Package which adds a PlantUML cell magic to IPython."
@@ -88,7 +93,7 @@ def plantuml(line, cell):
             fp.write(cell)
     else:
         location = cell.strip().split()[0]
-        url = urlparse.urlparse(location)
+        url = urlparse(location)
         if url.scheme in ['', 'file']:
             uml_path = url.path
             retain_uml = True
