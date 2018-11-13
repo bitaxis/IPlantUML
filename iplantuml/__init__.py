@@ -1,14 +1,22 @@
 import argparse
 import os
 import subprocess
-import urllib
-import urlparse
 import uuid
+import sys
 
 from IPython.core.magic import register_cell_magic
 from IPython.display import SVG
 
-import plantweb # dummy import to ensure plantweb module is present
+# Import urlparse() & urlretrieve() for either Python 2 or 3
+if sys.version_info >= (3,):
+    from urllib.parse import urlparse
+    from urllib.request import urlretrieve
+else:
+    from urlparse import urlparse
+    from urllib import urlretrieve
+
+# Dummy import to ensure plantweb module is present
+import plantweb
 
 __title__ = "iplantuml"
 __description__ = "Package which adds a PlantUML cell magic to IPython."
@@ -88,13 +96,13 @@ def plantuml(line, cell):
             fp.write(cell)
     else:
         location = cell.strip().split()[0]
-        url = urlparse.urlparse(location)
+        url = urlparse(location)
         if url.scheme in ['', 'file']:
             uml_path = url.path
             retain_uml = True
         else:
             uml_path = base_name + ".uml"
-            urllib.urlretrieve(location, uml_path)
+            urlretrieve(location, uml_path)
 
     try:
         output = plantuml_web(uml_path) if use_web else plantuml_exec(uml_path, plantuml_path=os.path.abspath(args.plantuml_path or PLANTUMLPATH))
